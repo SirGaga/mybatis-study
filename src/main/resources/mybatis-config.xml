@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--
+        1.Mybatis 可以使用properties来引入外部properties文件中的内容
+          resources:引入类路径下的资源
+          url:引入网络路径或者磁盘路径下的资源
+     -->
+    <properties resource="dbconfig.properties">
+
+    </properties>
+    <!--
+        2.settings 包含了很多重要的设置项，每一个设置项用一个 <setting name="mapUnderscoreToCamelCase" value="true"/> 来表示
+            name 代表设置项名字，value 代表这个设置项的取值
+    -->
+    <settings>
+        <!-- 是否开启驼峰命名规则映射，即从经典数据库列名 A_COLUMN 到经典Java属性名 aColumn 的类似映射 -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+    <!--
+        3.typeAliases 别名处理器，可以为我们的Java类型起别名，主要对处理 Mapper 的 xml 中的 resultType 属性
+    -->
+    <typeAliases>
+        <!-- typeAlias：为某个 Java 类型起别名，别名不区分大小写，type：指定要起别名的类型全类名，默认别名是类名的小写 employee；alias：指定新的别名 -->
+        <!--<typeAlias type="com.zhangjie.bean.Employee" alias="Employee"/>-->
+        <!-- package:为某个包下的所有的类批量起别名，name：指定包名（为当前包和该包下的所有的子包中的每一个类都起一个默认的别名（默认别名是类名的小写）） -->
+        <package name="com.zhangjie.bean" />
+        <!--批量起别名的情况下，可以使用@Alias("emp")某个类型指定新的别名-->
+    </typeAliases>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!-- 将我们写好的 sql 映射文件(EmployeeMapper.xml)一定要注册到全局配置文件(mybatis-config.xml)中 -->
+    <mappers>
+        <mapper resource="EmployeeMapper.xml"/>
+    </mappers>
+
+</configuration>
