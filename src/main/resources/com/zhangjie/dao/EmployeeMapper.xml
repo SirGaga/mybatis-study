@@ -9,7 +9,42 @@
     #{id} 从传递过来的参数中取出id值
 -->
 <mapper namespace="com.zhangjie.dao.EmployeeMapper">
+
+    <select id="getEmployeeByIdAndLastName" resultType="emp" databaseId="mysql">
+        select * from tbl_employee where id = #{id} and last_name = #{lastName}
+    </select>
+
     <select id="getEmployeeById" resultType="emp" databaseId="mysql">
         select * from tbl_employee where id = #{id}
     </select>
+    <!--
+        parameterType 可省略，可以写全类名或者别名
+        mysql支持自增主键，自增逐渐的值的获取，mybatis也是利用 statement.getGeneratedKeys() 来返回的
+        useGeneratedKeys 使用自增主键获取主键值策略
+        keyProperty 指定对应的主键值，也就是mybatis获取到主键值以后将这个值封装给JavaBean的哪个属性
+        Oracle不支持自增，Oracle 使用序列来模拟自增
+        每次插入的数据的主键是从序列中拿到的值
+
+     -->
+    <insert id="addEmployee" parameterType="emp" databaseId="mysql" flushCache="true" useGeneratedKeys="true" keyProperty="id">
+        insert into tbl_employee (last_name,gender,email) values (#{lastName},#{gender},#{email})
+    </insert>
+    <insert id="addEmployee" parameterType="emp" databaseId="oracle" flushCache="true" useGeneratedKeys="true" keyProperty="id">
+        /*keyProperty 将查询出来的主键值封装给JavaBean的哪一个属性*/
+        /*order="BEFORE" 当前sql在插入sql之前执行*/
+        /*resultType="Integer" 查出的数据的返回值类型*/
+        <!--<selectKey keyProperty="id" order="BEFORE" resultType="Integer">
+            select EMPLOYEES_SEQ.nextval from dual
+        </selectKey>-->
+        /*插入的主键是从序列中获取到的*/
+        insert into tbl_employee (id,last_name,gender,email) values (#{id},#{lastName},#{gender},#{email})
+    </insert>
+
+    <update id="editEmployeeById" flushCache="true" parameterType="emp" databaseId="mysql" >
+        update tbl_employee set last_name = #{lastName}, gender = #{gender}, email = #{email} where id = #{id}
+    </update>
+
+    <delete id="delEmployeeById" parameterType="integer" databaseId="mysql" flushCache="true" >
+        delete from tbl_employee where id = #{id}
+    </delete>
 </mapper>

@@ -80,6 +80,80 @@ public class MyBatisTest {
 
     }
 
+    /**
+     * 1.mybatis 允许增删改定义以下返回值
+     *      Integer、Long、Boolean
+     * 2.需要手动提交数据
+     * @throws IOException
+     */
+    @Test
+    public void testAdd() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        // 获取 SqlSession对象,不带参数调用，不会自动提交
+        try(SqlSession sqlSession = sqlSessionFactory.openSession()){
+            // 获取接口的实现类对象
+            // 为接口自动地创建一个代理对象，代理对象进行增删改查
+            Employee employee = new Employee();
+            employee.setLastName("Json");
+            employee.setGender("0");
+            employee.setEmail("Json@zhangjie.com");
+            EmployeeMapper employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
+            Long rows = employeeMapper.addEmployee(employee);
+            System.out.println(rows+"====="+employee.getId()+"=====");
+            sqlSession.commit();
+
+        }
+    }
+
+    @Test
+    public void testUpdate() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        // 获取 SqlSession对象,不带参数调用，不会自动提交
+        try(SqlSession sqlSession = sqlSessionFactory.openSession()){
+            // 获取接口的实现类对象
+            // 为接口自动地创建一个代理对象，代理对象进行增删改查
+            EmployeeMapper employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
+            Employee employee = employeeMapper.getEmployeeById(3);
+            employee.setGender("1");
+            Integer rows = employeeMapper.editEmployeeById(employee);
+            sqlSession.commit();
+            System.out.println(rows);
+
+        }
+    }
+
+    @Test
+    public void testDel() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        // 获取 SqlSession对象,不带参数调用，不会自动提交
+        try(SqlSession sqlSession = sqlSessionFactory.openSession()){
+            // 获取接口的实现类对象
+            // 为接口自动地创建一个代理对象，代理对象进行增删改查
+
+            EmployeeMapper employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
+            Boolean success = employeeMapper.delEmployeeById(3);
+            sqlSession.commit();
+            System.out.println(success);
+
+        }
+    }
+
+    @Test
+    public void testMultiParams() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+
+        // 获取 SqlSession对象
+        try(SqlSession sqlSession = sqlSessionFactory.openSession()){
+            // 获取接口的实现类对象
+            // 为接口自动地创建一个代理对象，代理对象进行增删改查
+            EmployeeMapper employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
+            employeeMapper.getEmployeeByIdAndLastName(1,"Tom");
+
+        }
+
+    }
+
+
     public SqlSessionFactory getSqlSessionFactory() throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
