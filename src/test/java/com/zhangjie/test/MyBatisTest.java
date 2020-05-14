@@ -2,6 +2,7 @@ package com.zhangjie.test;
 
 import com.zhangjie.bean.Employee;
 import com.zhangjie.dao.EmployeeMapper;
+import com.zhangjie.dao.EmployeeMapperAnnotation;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -58,6 +59,22 @@ public class MyBatisTest {
             EmployeeMapper employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
             System.out.println(employeeMapper.getClass());
             System.out.println(employeeMapper.getEmployeeById(1));
+
+        }
+
+    }
+
+    @Test
+    public void test02() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+
+        // 获取 SqlSession对象
+        try(SqlSession sqlSession = sqlSessionFactory.openSession()){
+            // 获取接口的实现类对象
+            // 为接口自动地创建一个代理对象，代理对象进行增删改查
+            EmployeeMapperAnnotation employeeMapperAnnotation = sqlSession.getMapper(EmployeeMapperAnnotation.class);
+            System.out.println(employeeMapperAnnotation.getClass());
+            System.out.println(employeeMapperAnnotation.getEmployeeById(1));
 
         }
 

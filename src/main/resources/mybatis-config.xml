@@ -49,9 +49,33 @@
             </dataSource>
         </environment>
     </environments>
-    <!-- 将我们写好的 sql 映射文件(EmployeeMapper.xml)一定要注册到全局配置文件(mybatis-config.xml)中 -->
+    <!--
+        5.databaseIdProvider 支持多数据库厂商
+            type="DB_VENDOR"(VendorDatabaseIdProvider) 得到数据库厂商的标识（驱动自带，DatabaseMetaData.getDatabaseProductName()），mybatis 就能根据数据库厂商的标识来执行不同的sql
+            Mapper.xml 中包裹 sql 语句的标签中databaseId 属性代表的就是这一条sql语句对应的数据库，即在获取到数据库厂商标识的情况下根据厂商标识自动判断该执行哪些sql
+    -->
+    <databaseIdProvider type="DB_VENDOR">
+        <!--为不同的数据库起别名-->
+        <property name="MySQL" value="mysql"/>
+        <property name="Oracle" value="oracle"/>
+        <property name="SQL Server" value="sqlServer"/>
+    </databaseIdProvider>
+    <!--
+        将我们写好的 sql 映射文件(EmployeeMapper.xml)一定要注册到全局配置文件(mybatis-config.xml)中
+        6.mappers：将 sql 映射注册到全局配置中
+            resource：引用类路径下的sql映射文件
+            url：引用网络路径下的或者磁盘路径下的sql映射文件（file:///var/mappers/AuthorMapper.xml）
+            class：直接引用（注册）接口的全名，
+                1.有sql映射文件，需要将sql映射文件跟接口放在同一个 package 中，且sql映射文件的名称跟接口的名称必须相同
+                2.没有sql映射文件，所有的sql都是利用注解写在接口上
+                推荐：比较重要的或者逻辑比较复杂的Dao接口写sql配置文件，不重要的或者逻辑比较简单的可以使用注解
+    -->
     <mappers>
-        <mapper resource="EmployeeMapper.xml"/>
+        <!--mapper:注册一个sql映射-->
+        <!--<mapper resource="EmployeeMapper.xml"/>
+        <mapper class="com.zhangjie.dao.EmployeeMapperAnnotation"/>-->
+        <!--批量注册:必须要求 sql 映射文件和 Mapper 接口 放在相同的 package 中-->
+        <package name="com.zhangjie.dao"/>
     </mappers>
 
 </configuration>
