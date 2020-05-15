@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhangjie.dao.EmployeePlusMapper">
+    <!--
+        自定义某个javaBean的封装规则
+        type 自定义的java类型
+        id 唯一标识,方便引用
+    -->
+    <resultMap id="MyEmp" type="com.zhangjie.bean.Employee">
+        <!--
+            指定主键列的封装规则
+            id定义在底层会有优化
+            column:指定数据库表中哪一列当作主键
+            property:指定主键列对应javaBean中的哪一个属性
+        -->
+        <id column="id" property="id" />
+        <!--
+            定义普通列的封装规则
+        -->
+        <result column="last_name" property="lastName"/>
+        <result column="gender" property="gender"/>
+        <result column="email" property="email"/>
+        <!--其他不指定的列会按照数据库中的列名来去跟javaBean中的属性做对应，相同的就会自动对应起来，但是只要写了resultMap就推荐把全列全属性的映射规则都写上-->
+
+    </resultMap>
+    <!--resultMap:自定义结果集映射规则-->
+    <select id="getEmployeeById" databaseId="mysql" resultMap="MyEmp">
+        select * from tbl_employee where id = #{id}
+    </select>
+    <!--
+        查询 Employee 的同时查询出员工对应的部门
+        联合查询出的复杂结果使用级联属性进行封装结果集
+    -->
+    <resultMap id="MyEmpDetail" type="com.zhangjie.bean.Employee">
+        <id property="id" column="id"/>
+        <result column="last_name" property="lastName"/>
+        <result column="gender" property="gender"/>
+        <result column="email" property="email"/>
+        <result column="deptId" property="dept.id"/>
+        <result column="deptName" property="dept.departmentName"/>
+    </resultMap>
+    <!--使用association定义关联的单个对象的封装规则-->
+    <resultMap id="MyEmpDetailAssociation" type="com.zhangjie.bean.Employee">
+        <id property="id" column="id"/>
+        <result column="last_name" property="lastName"/>
+        <result column="gender" property="gender"/>
+        <result column="email" property="email"/>
+        <!--
+           association 可以指定联合的javaBean对象
+           property:指定哪个属性是联合的对象
+           javaType:指定联合的对象的类型[不能省略]
+        -->
+        <association property="dept" javaType="com.zhangjie.bean.Department">
+            <id column="deptId" property="id"/>
+            <result column="deptName" property="departmentName"/>
+        </association>
+    </resultMap>
+    <select id="getDetailEmployeeInfoById" databaseId="mysql" resultMap="MyEmpDetailAssociation">/*MyEmpDetail*/
+        select
+            emp.id id,emp.last_name last_name,emp.email email,emp.gender gender,dept.id deptId,dept.department_name deptName
+        from tbl_employee emp,tbl_department dept where emp.dept_id = dept.id and emp.last_name like #{lastName}
+    </select>
+
+</mapper>

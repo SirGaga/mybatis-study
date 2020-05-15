@@ -3,6 +3,7 @@ package com.zhangjie.test;
 import com.zhangjie.bean.Employee;
 import com.zhangjie.dao.EmployeeMapper;
 import com.zhangjie.dao.EmployeeMapperAnnotation;
+import com.zhangjie.dao.EmployeePlusMapper;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -222,6 +223,26 @@ public class MyBatisTest {
             System.out.println(employeeMapList.toString());
 
 
+        }
+    }
+    @Test
+    public void testSelectInPlus() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        // 获取 SqlSession对象
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            EmployeePlusMapper plusMapper = sqlSession.getMapper(EmployeePlusMapper.class);
+            Employee employee = plusMapper.getEmployeeById(1);
+            System.out.println(employee);
+        }
+    }
+    @Test
+    public void testGetDetailEmployeeInfoById() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        // 获取 SqlSession对象
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            EmployeePlusMapper plusMapper = sqlSession.getMapper(EmployeePlusMapper.class);
+            List<Employee> employeeList = plusMapper.getDetailEmployeeInfoById("%o%");
+            System.out.println(employeeList);
         }
     }
 
