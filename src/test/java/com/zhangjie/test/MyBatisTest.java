@@ -11,6 +11,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MyBatisTest {
     /**
@@ -151,6 +154,75 @@ public class MyBatisTest {
 
         }
 
+    }
+
+    @Test
+    public void testMap() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+
+        // 获取 SqlSession对象
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            // 获取接口的实现类对象
+            // 为接口自动地创建一个代理对象，代理对象进行增删改查
+            EmployeeMapper employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("id", 1);
+            map.put("lastName", "Tom");
+            employeeMapper.getEmployeeByConditions(map);
+
+        }
+    }
+
+    @Test
+    public void testListReturn() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+
+        // 获取 SqlSession对象
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            // 获取接口的实现类对象
+            // 为接口自动地创建一个代理对象，代理对象进行增删改查
+            EmployeeMapper employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
+
+            List<Employee> employeeList = employeeMapper.getEmployeeList("%o%");
+
+            System.out.println(employeeList.size());
+
+        }
+    }
+
+    @Test
+    public void testMapReturn() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+
+        // 获取 SqlSession对象
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            // 获取接口的实现类对象
+            // 为接口自动地创建一个代理对象，代理对象进行增删改查
+            EmployeeMapper employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
+
+            Map<String, Object> employeeMap = employeeMapper.getEmployeeMap(1);
+
+            System.out.println(employeeMap.toString());
+
+
+        }
+    }
+    @Test
+    public void testMapListReturn() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+
+        // 获取 SqlSession对象
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            // 获取接口的实现类对象
+            // 为接口自动地创建一个代理对象，代理对象进行增删改查
+            EmployeeMapper employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
+
+            Map<Integer, Employee> employeeMapList = employeeMapper.getEmployeeMapList("%o%");
+
+            System.out.println(employeeMapList.toString());
+
+
+        }
     }
 
 

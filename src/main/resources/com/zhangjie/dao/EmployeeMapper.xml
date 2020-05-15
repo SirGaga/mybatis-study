@@ -10,6 +10,19 @@
 -->
 <mapper namespace="com.zhangjie.dao.EmployeeMapper">
 
+    <select id="getEmployeeMapList" resultType="emp" databaseId="mysql" >
+        select * from tbl_employee where last_name like #{lastName}
+    </select>
+    <select id="getEmployeeMap" resultType="map" databaseId="mysql" >
+        select * from tbl_employee where id = #{id}
+    </select>
+    <!--resultType:如果返回的是一个集合，要写集合中元素的类型-->
+    <select id="getEmployeeList" resultType="emp" databaseId="mysql" >
+        select * from tbl_employee where last_name like #{lastName}
+    </select>
+    <select id="getEmployeeByConditions" resultType="emp" databaseId="mysql" >
+        select * from tbl_employee where id = #{id} and last_name = #{lastName}
+    </select>
     <select id="getEmployeeByIdAndLastName" resultType="emp" databaseId="mysql">
         select * from tbl_employee where id = #{id} and last_name = #{lastName}
     </select>

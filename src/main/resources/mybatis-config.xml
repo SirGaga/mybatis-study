@@ -18,6 +18,7 @@
     <settings>
         <!-- 是否开启驼峰命名规则映射，即从经典数据库列名 A_COLUMN 到经典Java属性名 aColumn 的类似映射 -->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="jdbcTypeForNull" value="NULL"/>
     </settings>
     <!--
         3.typeAliases 别名处理器，可以为我们的Java类型起别名，主要对处理 Mapper 的 xml 中的 resultType 属性
