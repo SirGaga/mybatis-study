@@ -19,6 +19,11 @@
         <!-- 是否开启驼峰命名规则映射，即从经典数据库列名 A_COLUMN 到经典Java属性名 aColumn 的类似映射 -->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
         <setting name="jdbcTypeForNull" value="NULL"/>
+        <!--显示的指定每个我们需要更改的配置的值，即使他的默认值跟我们要设置的值相同-->
+        <!--开启延迟加载-->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!--侵略延迟加载，设置全部加载还是按需加载-->
+        <setting name="aggressiveLazyLoading" value="false"/>
     </settings>
     <!--
         3.typeAliases 别名处理器，可以为我们的Java类型起别名，主要对处理 Mapper 的 xml 中的 resultType 属性

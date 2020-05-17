@@ -63,4 +63,36 @@
         from tbl_employee emp,tbl_department dept where emp.dept_id = dept.id and emp.last_name like #{lastName}
     </select>
 
+    <!--
+        使用association进行分步查询
+        1.先按照员工id查询员工信息
+        2.根据查询到的员工信息中的 dept.id deptId 的值，去部门表查出部门信息
+        3.部门设置到员工中
+    -->
+    <resultMap id="MyEmpDetailAssociationStep" type="com.zhangjie.bean.Employee">
+        <id property="id" column="id"/>
+        <result column="last_name" property="lastName"/>
+        <result column="gender" property="gender"/>
+        <result column="email" property="email"/>
+        <!--
+            select表明当前属性是调用select指定的方法查询出来的结果
+            column指定将哪一列的值传给这个方法
+            流程：使用select指定的方法（传入column指定的这列参数的值）查出对象，并封装给property指定的属性
+        -->
+        <association property="dept" select="com.zhangjie.dao.DepartmentMapper.getDeptById" column="dept_id">
+
+        </association>
+    </resultMap>
+    <select id="getDetailEmployeeInfoByIdStep" databaseId="mysql" resultMap="MyEmpDetailAssociationStep">
+        select * from tbl_employee  where last_name like #{lastName}
+    </select>
+    <!--
+        分步查询可以使用延迟加载，在上述分布查询的基础上加上两个配置
+        在全局配置中的settings标签内：
+            开启延迟加载
+            <setting name="lazyLoadingEnabled" value="true"/>
+            侵略延迟加载，设置全部加载还是按需加载
+            <setting name="aggressiveLazyLoading" value="false"/>
+    -->
+
 </mapper>

@@ -246,6 +246,17 @@ public class MyBatisTest {
         }
     }
 
+    @Test
+    public void testGetDetailEmployeeInfoByIdStep() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        // 获取 SqlSession对象
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            EmployeePlusMapper plusMapper = sqlSession.getMapper(EmployeePlusMapper.class);
+            List<Employee> employeeList = plusMapper.getDetailEmployeeInfoByIdStep("%o%");
+            System.out.println(employeeList.get(0).getLastName());
+        }
+    }
+
 
     public SqlSessionFactory getSqlSessionFactory() throws IOException {
         String resource = "mybatis-config.xml";
@@ -254,6 +265,8 @@ public class MyBatisTest {
                 new SqlSessionFactoryBuilder().build(inputStream);
         return sqlSessionFactory;
     }
+
+
 
 
 }
