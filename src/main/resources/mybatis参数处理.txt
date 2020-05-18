@@ -19,7 +19,7 @@
         int pageNo;
         int pageSize;
     }
-特别注意，如果参数传入 Collection(List、Set) 类型或者是数组类型，也会特殊处理，也是吧传入的list或者数组封装在map中,
+特别注意，如果参数传入 Collection(List、Set) 类型或者是数组类型，也会特殊处理，也是把传入的list或者数组封装在map中,
     key:Collection(collection),如果是List还可以使用key(list)
         数组(array)
     public Employee getEmployeeByConditions(List<Integer> ids);

@@ -21,9 +21,95 @@
                 and gender = #{gender}
             </if>
         </where>
+    </select>
+    <select id="getEmployeeByConditionTrim" databaseId="mysql" resultType="emp">
+        select * from tbl_employee <!-- where 1=1  -->
+        <!--
+            trim:自定义字符串的截取规则
+            prefix:前缀，trim标签体中 整个字符串拼串后的结果 加一个前缀
+            prefixOverrides:前缀覆盖，去掉整个字符串前多余的字符
+            suffix:后缀，trim标签体中 整个字符串拼串后的结果 加一个后缀
+            suffixOverrides:后缀覆盖，去掉整个字符串后多余的字符
+        -->
+        <trim prefix=" where " prefixOverrides="" suffix="" suffixOverrides="and">
+            <!-- test 判断表达式（OGNL） 类似于 c:if test 从参数中取值进行判断,遇见特殊符号要写转义字符 -->
+            <if test="id!=null">
+                id = #{id} and
+            </if>
+            <if test="lastName != null and lastName != ''">
+                last_name like #{lastName} and
+            </if>
+            <if test="email != null and email.trim() != ''">
+                 email like #{email} and
+            </if>
+            <!-- OGNL 会进行字符串与数字的转换判断 "0"==0 -->
+            <if test=" gender == 0 or gender ==1 ">
+                gender = #{gender} and
+            </if>
+        </trim>
+    </select>
+    <select id="getEmployeeByConditionChoose" databaseId="mysql" resultType="emp">
+        select * from tbl_employee
+        <where>
+            <choose>
+                <when test="id != null">
+                    id = #{id}
+                </when>
+                <when test="lastName != null and lastName != ''">
+                    last_name like #{lastName}
+                </when>
+                <otherwise>
+                    1=1
+                </otherwise>
+            </choose>
 
+        </where>
 
+    </select>
+    <update id="updateEmployee" databaseId="mysql" parameterType="emp" keyProperty="id">
+        update tbl_employee
+        <!--<set>
+            <if test="lastName != null">
+                last_name = #{lastName},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+        </set>-->
+        <trim prefix=" set " suffixOverrides=",">
+            <if test="lastName != null">
+                last_name = #{lastName},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+        </trim>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+    <select id="getEmployeeByConditionForeach" databaseId="mysql" resultType="emp">
+        select * from tbl_employee where id in
+        <!--
+            collection 指定要遍历的集合
+                list类型的参数会特殊处理封装在map中，map的key就叫list
+            item 将当前遍历出的元素赋值给指定的变量
+            #{变量名} 就能取出变量的值也就是当前遍历出的元素
+            separator 每个元素之间的分隔符
+            open 在遍历完成的结果拼接完之后，在开始位置添加一个自定的字符或者字符串
+            close 在遍历完成的结果拼接完之后，在结束位置添加一个自定的字符或者字符串
+            index 遍历list的时候代表索引下标，但是遍历map的时候index表示的是key，item代表的就是map的value
+        -->
 
+        <foreach collection="ids" item="item_id" separator="," open="( " close=" )">
+            #{item_id}
+        </foreach>
     </select>
 
 </mapper>

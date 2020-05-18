@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -290,10 +291,61 @@ public class MyBatisTest {
             employee.setGender("0");
             List<Employee> employees = mapper.getEmployeeByCondition(employee);
             System.out.println(employees);
-
         }
     }
+    @Test
+    public void testGetEmployeeByConditionTrim() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        // 获取 SqlSession对象
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            EmployeeDynamicMapper mapper = sqlSession.getMapper(EmployeeDynamicMapper.class);
+            Employee employee = new Employee();
+            employee.setLastName("%o%");
+            employee.setGender("0");
+            List<Employee> employees = mapper.getEmployeeByConditionTrim(employee);
+            System.out.println(employees);
+        }
+    }
+    @Test
+    public void testGetEmployeeByConditionChoose() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        // 获取 SqlSession对象
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            EmployeeDynamicMapper mapper = sqlSession.getMapper(EmployeeDynamicMapper.class);
+            Employee employee = new Employee();
+            employee.setId(1);
+            employee.setLastName("%o%");
 
+            List<Employee> employees = mapper.getEmployeeByConditionChoose(employee);
+            System.out.println(employees);
+        }
+    }
+    @Test
+    public void testGetEmployeeByConditionSet() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        // 获取 SqlSession对象
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            EmployeeDynamicMapper mapper = sqlSession.getMapper(EmployeeDynamicMapper.class);
+            Employee employee = new Employee();
+            employee.setId(1);
+            employee.setLastName("Tommy");
+            employee.setGender("1");
+
+            mapper.updateEmployee(employee);
+            sqlSession.commit();
+        }
+    }
+    @Test
+    public void testGetEmployeeByConditionForeach() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        // 获取 SqlSession对象
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            EmployeeDynamicMapper mapper = sqlSession.getMapper(EmployeeDynamicMapper.class);
+
+            List<Employee> employees = mapper.getEmployeeByConditionForeach(Arrays.asList(1, 2, 3, 4, 5, 6, 7));
+            System.out.println(employees);
+        }
+    }
 
     public SqlSessionFactory getSqlSessionFactory() throws IOException {
         String resource = "mybatis-config.xml";
