@@ -285,10 +285,9 @@ public class MyBatisTest {
 
     public SqlSessionFactory getSqlSessionFactory() throws IOException {
         String resource = "mybatis-config.xml";
-        InputStream inputStream = Resources.getResourceAsStream(resource);
-        SqlSessionFactory sqlSessionFactory =
-                new SqlSessionFactoryBuilder().build(inputStream);
-        return sqlSessionFactory;
+        try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+            return new SqlSessionFactoryBuilder().build(inputStream);
+        }
     }
 
 
