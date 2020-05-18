@@ -82,8 +82,9 @@
         <association property="dept" select="com.zhangjie.dao.DepartmentMapper.getDeptById" column="dept_id">
 
         </association>
+
     </resultMap>
-    <select id="getDetailEmployeeInfoByIdStep" databaseId="mysql" resultMap="MyEmpDetailAssociationStep">
+    <select id="getDetailEmployeeInfoByIdStep" databaseId="mysql" resultMap="MyDiscriminator"> /*MyEmpDetailAssociationStep*/
         select * from tbl_employee  where last_name like #{lastName}
     </select>
     <!--
@@ -94,5 +95,36 @@
             侵略延迟加载，设置全部加载还是按需加载
             <setting name="aggressiveLazyLoading" value="false"/>
     -->
+    <!--
+        查询部门的时候将所有的员工信息也查询出来，去DepartmentMapper.xml中查看
+    -->
+
+    <select id="getEmployeesByDeptId" databaseId="mysql" resultType="emp">
+        select * from tbl_employee where dept_id = #{deptId}
+    </select>
+    <!--鉴别器：mybtis可以使用discriminator判断某列的值，然后根据某列的值改变封装行为-->
+    <resultMap id="MyDiscriminator" type="com.zhangjie.bean.Employee">
+        <id property="id" column="id"/>
+        <result column="last_name" property="lastName"/>
+        <result column="gender" property="gender"/>
+        <result column="email" property="email"/>
+
+        <!--
+            column：指定要判定的列名
+            javaType：列值对应的java类型
+        -->
+        <discriminator javaType="string" column="gender">
+            <!--resultType：指定封装的结果类型-->
+            <case value="0" resultType="com.zhangjie.bean.Employee">
+                <association property="dept" select="com.zhangjie.dao.DepartmentMapper.getDeptById" column="dept_id"/>
+            </case>
+            <case value="1" resultType="com.zhangjie.bean.Employee">
+                <id property="id" column="id"/>
+                <result column="last_name" property="lastName"/>
+                <result column="gender" property="gender"/>
+                <result column="last_name" property="email"/>
+            </case>
+        </discriminator>
+    </resultMap>
 
 </mapper>

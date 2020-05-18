@@ -1,6 +1,8 @@
 package com.zhangjie.test;
 
+import com.zhangjie.bean.Department;
 import com.zhangjie.bean.Employee;
+import com.zhangjie.dao.DepartmentMapper;
 import com.zhangjie.dao.EmployeeMapper;
 import com.zhangjie.dao.EmployeeMapperAnnotation;
 import com.zhangjie.dao.EmployeePlusMapper;
@@ -253,7 +255,30 @@ public class MyBatisTest {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             EmployeePlusMapper plusMapper = sqlSession.getMapper(EmployeePlusMapper.class);
             List<Employee> employeeList = plusMapper.getDetailEmployeeInfoByIdStep("%o%");
-            System.out.println(employeeList.get(0).getLastName());
+            System.out.println(employeeList);
+        }
+    }
+
+    @Test
+    public void testGetAdvancedDeptById() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        // 获取 SqlSession对象
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            DepartmentMapper departmentMapper = sqlSession.getMapper(DepartmentMapper.class);
+            Department department = departmentMapper.getAdvancedDeptById(1);
+            System.out.println(department);
+        }
+    }
+
+    @Test
+    public void testGetAdvancedDeptByIdWithStep() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        // 获取 SqlSession对象
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            DepartmentMapper departmentMapper = sqlSession.getMapper(DepartmentMapper.class);
+            Department department = departmentMapper.getAdvancedDeptByIdWithStep(1);
+            System.out.println(department);
+            System.out.println(department.getEmployees());
         }
     }
 

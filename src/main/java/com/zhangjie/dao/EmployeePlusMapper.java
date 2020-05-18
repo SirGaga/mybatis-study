@@ -12,4 +12,6 @@ public interface EmployeePlusMapper {
 
     public List<Employee> getDetailEmployeeInfoByIdStep(String lastName);
 
+    public List<Employee> getEmployeesByDeptId(Integer deptId);
+
 }

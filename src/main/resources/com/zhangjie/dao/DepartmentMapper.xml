@@ -6,5 +6,52 @@
     <select id="getDeptById" databaseId="mysql" resultType="com.zhangjie.bean.Department">
         select id,department_name departmentName from tbl_department where id = #{id}
     </select>
+    <!--嵌套结果集的方式，使用collection标签定义关联的集合类型的属性封装规则-->
+    <resultMap id="advancedDept" type="com.zhangjie.bean.Department">
+        <id column="did" property="id"/>
+        <result column="department_name" property="departmentName"/>
+        <!--
+            collection定义关联集合类型的属性的封装规则
+            ofType:指定集合中元素的类型
+        -->
+        <collection property="employees" ofType="emp">
+            <!--定义集合中元素的封装规则-->
+            <id property="id" column="eid"/>
+            <result property="lastName" column="last_name"/>
+            <result property="email" column="email"/>
+            <result property="gender" column="gender"/>
+        </collection>
+    </resultMap>
+    <select id="getAdvancedDeptById" databaseId="mysql" resultMap="advancedDept">
+        select
+            d.id did,d.department_name department_name,e.id eid,e.dept_id dept_id,e.last_name last_name,e.email email,e.gender gender
+        from tbl_department d
+                 left join tbl_employee e
+                           on d.id = e.dept_id
+        where d.id = #{id}
+    </select>
+    <resultMap id="advancedDeptWithStep" type="com.zhangjie.bean.Department">
+        <id column="id" property="id"/>
+        <result column="department_name" property="departmentName"/>
+        <collection property="employees"
+                    select="com.zhangjie.dao.EmployeePlusMapper.getEmployeesByDeptId"
+                    column="{deptId=id}"
+                    fetchType="lazy"
+
+        >
+
+        </collection>
+    </resultMap>
+    <select id="getAdvancedDeptByIdWithStep" databaseId="mysql" resultMap="advancedDeptWithStep">
+        select id,department_name from tbl_department where id = #{id}
+    </select>
+    <!--
+        扩展：多列的值传递调用
+        将多列的值封装map传递：
+        column="{key1=columnName1,key2,column2}"
+        fetchType="lazy" 表示使用延迟加载
+        fetchType="eager" 表示立即加载
+        跟全局配置相比，这里的优先级更高
+    -->
 
 </mapper>
