@@ -2,10 +2,7 @@ package com.zhangjie.test;
 
 import com.zhangjie.bean.Department;
 import com.zhangjie.bean.Employee;
-import com.zhangjie.dao.DepartmentMapper;
-import com.zhangjie.dao.EmployeeMapper;
-import com.zhangjie.dao.EmployeeMapperAnnotation;
-import com.zhangjie.dao.EmployeePlusMapper;
+import com.zhangjie.dao.*;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -39,7 +36,7 @@ public class MyBatisTest {
      *      1.根据全局配置文件得到 SqlSessionFactory
      *      2.使用 SqlSessionFactory 获取到 SqlSession ,用它来进行增删改查,一个sqlSession代表和数据库的一次会话，用完关闭
      *      3.使用sql的唯一标识来告诉 mybatis 执行哪个sql，sql都是保存在 sql 映射文件中的
-     * @throws IOException
+     * @throws IOException 抛出异常
      */
     @Test
     public void test() throws IOException {
@@ -90,7 +87,7 @@ public class MyBatisTest {
      * 1.mybatis 允许增删改定义以下返回值
      *      Integer、Long、Boolean
      * 2.需要手动提交数据
-     * @throws IOException
+     * @throws IOException 抛出异常
      */
     @Test
     public void testAdd() throws IOException {
@@ -279,6 +276,21 @@ public class MyBatisTest {
             Department department = departmentMapper.getAdvancedDeptByIdWithStep(1);
             System.out.println(department);
             System.out.println(department.getEmployees());
+        }
+    }
+
+    @Test
+    public void testGetEmployeeByCondition() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        // 获取 SqlSession对象
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            EmployeeDynamicMapper mapper = sqlSession.getMapper(EmployeeDynamicMapper.class);
+            Employee employee = new Employee();
+            employee.setLastName("%o%");
+            //employee.setGender("0");
+            List<Employee> employees = mapper.getEmployeeByCondition(employee);
+            System.out.println(employees);
+
         }
     }
 
