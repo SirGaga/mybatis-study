@@ -287,7 +287,7 @@ public class MyBatisTest {
             EmployeeDynamicMapper mapper = sqlSession.getMapper(EmployeeDynamicMapper.class);
             Employee employee = new Employee();
             employee.setLastName("%o%");
-            //employee.setGender("0");
+            employee.setGender("0");
             List<Employee> employees = mapper.getEmployeeByCondition(employee);
             System.out.println(employees);
 
