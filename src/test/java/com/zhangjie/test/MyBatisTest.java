@@ -414,9 +414,13 @@ public class MyBatisTest {
      *      2.去mapper.xml中配置使用二级缓存 <mapper><cache></cache></mapper>
      *      3.POJO需要实现序列化接口
      *  和缓存有关的设置和属性
-     *      1.cacheEnabled=true;false:关闭缓存（二级缓存关闭、一级缓存未关闭）
+     *      1.全局配置中的 cacheEnabled=true;false:关闭缓存（二级缓存关闭、一级缓存未关闭）
      *      2.mapper.xml中的每个 select 标签都有 useCache="true" 这个属性，false 代表不使用二级缓存、一级缓存可以照常使用
-     *      3.
+     *      3.mapper.xml中的每个 增删改 标签都有 flushCache="true" 这个属性，增删改之后就会清除缓存，一级缓存会清空，二级缓存也会清空
+     *      4.mapper.xml中的每个 select 标签都有 flushCache="false"这个属性，如果设置为 true，那么每次查询都会清空一二级缓存
+     *      5.sqlSession.clearCache();方法只会清空当前session的一级缓存，不会清空二级缓存
+     *      6.全局配置中的 localCacheScope 本地缓存作用域，影响一级缓存，默认Session，即当前会话的所有数据保存在会话缓存中；
+     *          取值为STATEMENT表示可以禁用一级缓存
      */
     @Test
     public void testFirstLevelCache() throws IOException {
