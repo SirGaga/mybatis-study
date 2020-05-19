@@ -394,7 +394,83 @@ public class MyBatisTest {
             return new SqlSessionFactoryBuilder().build(inputStream);
         }
     }
+    /**
+     * mybatis提供两级缓存
+     * 一级缓存 本地缓存 sqlSession级别的缓存，是一直开启的，无法关闭，本质上来时就是基于sqlSession的一个Map
+     *  与数据库同一次会话期间查询到的数据会放在本地缓存中，如果要获取相同的数据，直接从缓存中拿，没必要去查询数据库
+     *  一级缓存的失效情况（需要向数据库再次发送sql进行查询）：
+     *      1.sqlSession不同
+     *      2.sqlSession相同，查询条件不同（当前一级缓存中还没有这个数据）
+     *      3.sqlSession相同，两次查询之间执行了增删改操作(这次增删改可能对当前查询到的数据有影响，缓存失效)
+     *      4.sqlSession相同，手动清除了一级缓存
+     * 二级缓存 全局缓存
+     */
+    @Test
+    public void testFirstLevelCache() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        Employee employee01;
+        Employee employee03;
 
+        //1.
+        /*try(SqlSession sqlSession = sqlSessionFactory.openSession()){
+            EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
+            employee01 = mapper.getEmployeeById(1);
+            System.out.println(employee01);
+
+            Employee employee02 = mapper.getEmployeeById(2);
+            System.out.println(employee02);
+            System.out.println(employee01 == employee02);
+        }
+        try(SqlSession sqlSession = sqlSessionFactory.openSession()){
+            EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
+            employee03 = mapper.getEmployeeById(1);
+            System.out.println(employee03);
+
+            Employee employee04 = mapper.getEmployeeById(1);
+            System.out.println(employee03);
+            System.out.println(employee03 == employee04);
+            System.out.println(employee01 == employee03);
+        }*/
+
+        //2.
+        /*try(SqlSession sqlSession = sqlSessionFactory.openSession()){
+            EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
+            employee01 = mapper.getEmployeeById(1);
+            System.out.println(employee01);
+
+            Employee employee02 = mapper.getEmployeeById(2);
+            System.out.println(employee02);
+            System.out.println(employee01 == employee02);
+            employee03 = mapper.getEmployeeById(1);
+            System.out.println(employee03);
+            System.out.println(employee01 == employee03);
+        }*/
+        //3.
+        /*try(SqlSession sqlSession = sqlSessionFactory.openSession()){
+            EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
+            employee01 = mapper.getEmployeeById(1);
+            System.out.println(employee01);
+            Employee employee = new Employee();
+            employee.setLastName("Paul");
+            employee.setEmail("Paul@zhangjie.com");
+            employee.setGender("1");
+            mapper.addEmployee(employee);
+            sqlSession.commit();
+            Employee employee02 = mapper.getEmployeeById(1);
+            System.out.println(employee02);
+            System.out.println(employee01 == employee02);
+        }*/
+        try(SqlSession sqlSession = sqlSessionFactory.openSession()){
+            EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
+            employee01 = mapper.getEmployeeById(1);
+            System.out.println(employee01);
+            sqlSession.clearCache();
+            Employee employee02 = mapper.getEmployeeById(1);
+            System.out.println(employee02);
+            System.out.println(employee01 == employee02);
+        }
+
+    }
 
 
 
