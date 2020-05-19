@@ -11,10 +11,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MyBatisTest {
     /**
@@ -343,6 +340,50 @@ public class MyBatisTest {
             EmployeeDynamicMapper mapper = sqlSession.getMapper(EmployeeDynamicMapper.class);
 
             List<Employee> employees = mapper.getEmployeeByConditionForeach(Arrays.asList(1, 2, 3, 4, 5, 6, 7));
+            System.out.println(employees);
+        }
+    }
+
+    @Test
+    public void testAddEmployees() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        // 获取 SqlSession对象
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            EmployeeDynamicMapper mapper = sqlSession.getMapper(EmployeeDynamicMapper.class);
+            Employee employee = new Employee();
+            Department department = new Department();
+            department.setId(1);
+            employee.setLastName("Tommy");
+            employee.setEmail("Tommy@zhangjie.com");
+            employee.setGender("1");
+            employee.setDept(department);
+            Employee employee2 = new Employee();
+            employee2.setLastName("David");
+            employee2.setEmail("David@zhangjie.com");
+            employee2.setGender("1");
+            employee2.setDept(department);
+            List<Employee> employeeList = new ArrayList<Employee>();
+            employeeList.add(employee);
+            employeeList.add(employee2);
+            mapper.addEmployees(employeeList);
+            sqlSession.commit();
+        }
+    }
+    @Test
+    public void testGetEmployeeWithInnerParameter() throws IOException {
+        SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+        // 获取 SqlSession对象
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            EmployeeDynamicMapper mapper = sqlSession.getMapper(EmployeeDynamicMapper.class);
+            Employee employee = new Employee();
+            Department department = new Department();
+            department.setId(1);
+            employee.setLastName("o");
+            employee.setEmail("Tommy@zhangjie.com");
+            employee.setGender("1");
+            employee.setDept(department);
+
+            List<Employee> employees = mapper.getEmployeeWithInnerParameter(employee);//null
             System.out.println(employees);
         }
     }

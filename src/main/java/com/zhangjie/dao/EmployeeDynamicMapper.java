@@ -14,4 +14,8 @@ public interface EmployeeDynamicMapper {
     void updateEmployee(Employee e);
 
     List<Employee> getEmployeeByConditionForeach(@Param("ids") List<Integer> ids);
+
+    void addEmployees(@Param("employees") List<Employee> employees);
+
+    List<Employee> getEmployeeWithInnerParameter(Employee employee);
 }

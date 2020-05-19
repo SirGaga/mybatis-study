@@ -111,5 +111,45 @@
             #{item_id}
         </foreach>
     </select>
+    <!--<insert id="addEmployees" databaseId="mysql" flushCache="true" keyColumn="id">
+        insert into tbl_employee( last_name, gender, email, dept_id) values
+        <foreach collection="employees" item="employee"  separator=",">
+            (#{employee.lastName},#{employee.gender},#{employee.email},#{employee.dept.id})
+        </foreach>
+    </insert>-->
+    <insert id="addEmployees" databaseId="mysql" flushCache="true" keyColumn="id">
+        <foreach collection="employees" item="employee"  separator=";">
+            insert into tbl_employee( <include refid="insertColumn"/>) values
+            (#{employee.lastName},#{employee.gender},#{employee.email},#{employee.dept.id})
+        </foreach>
+    </insert>
+    <!--mybatis有两个内置参数：可以被用来取值和判断-->
+    <!--1._parameter:代表整个参数：单个参数，_parameter就是这个参数；如果是多个参数，参数会被封装成一个map，_parameter就是代表这个map-->
+    <!--2._databaseId:如果配置了databaseIdProvider标签（全局配置），_databaseId代表当前数据库的别名-->
+    <select id="getEmployeeWithInnerParameter"  resultType="emp">
+        <!--bind:可以将OGNL表达式的值绑定到一个变量中，方便引用-->
+        <bind name="_lastName" value="'%'+lastName+'%'"/>
+        <if test="_databaseId == 'mysql'">
+            select * from tbl_employee
+            <if test="_parameter != null">
+                where last_name like #{_lastName}
+            </if>
+        </if>
+
+    </select>
+    <!--
+        sql 抽取可重用的sql片段，方便后边的引用
+        1.将经常要查询的列名，或者插入语句用到的列名抽取出来，方便引用
+        2.include来引用已经抽取的sql标签中的内容
+        3.可以在include标签下创建子标签 property 该标签中的 name="" value="" name表示该变量的名称，value代表该变量的值，
+            注意，引用的时候需要用${},而不是#{}
+
+    -->
+    <sql id="insertColumn" >
+        <if test="_databaseId = 'mysql'">
+            last_name, gender, email, dept_id
+        </if>
+    </sql>
+
 
 </mapper>
