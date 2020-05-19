@@ -9,7 +9,20 @@
     #{id} 从传递过来的参数中取出id值
 -->
 <mapper namespace="com.zhangjie.dao.EmployeeMapper">
-
+    <!--
+        eviction 缓存的回收策略：
+            LRU - 最近最少使用的，移除最长时间不被使用的对象，默认
+            FIFO - 先进先出，按照对象进入缓存的顺序来移除它
+            SOFT - 软引用，移除基于垃圾回收器状态和软引用规则的对象
+            WEAK - 弱引用，更积极的移除基于垃圾收集器状态和弱引用规则的对象
+        flushInterval 缓存刷新间隔 缓存多长时间清空一次 默认不清空，可以设置一个毫秒值
+        readOnly 缓存是否只读
+            true :只读，mybatis认为所有从缓存中获取的数据的操作都应该是只读操作的，不会修改数据，mybatis为了加快获取速度，直接将数据在缓存中的引用交给用户。不安全，速度快
+            false:非只读，默认，mybatis认为获取来的数据可能会被修改，mybatis会利用序列化和反序列化技术克隆一个新的数据给用户。安全，速度慢
+        size 代表可以缓存多少个元素
+        type 指定自定义缓存的全类名，需要自定义的话需要实现Cache接口
+    -->
+    <cache eviction="LRU" flushInterval="60000" readOnly="false"  size="1024" ></cache>
     <select id="getEmployeeMapList" resultType="emp" databaseId="mysql" >
         select * from tbl_employee where last_name like #{lastName}
     </select>

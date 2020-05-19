@@ -24,6 +24,8 @@
         <setting name="lazyLoadingEnabled" value="true"/>
         <!--侵略延迟加载，设置全部加载还是按需加载-->
         <setting name="aggressiveLazyLoading" value="false"/>
+        <!--开启全局二级缓存机制-->
+        <setting name="cacheEnabled" value="true"/>
     </settings>
     <!--
         3.typeAliases 别名处理器，可以为我们的Java类型起别名，主要对处理 Mapper 的 xml 中的 resultType 属性
