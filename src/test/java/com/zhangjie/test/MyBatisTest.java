@@ -362,7 +362,7 @@ public class MyBatisTest {
             employee2.setEmail("David@zhangjie.com");
             employee2.setGender("1");
             employee2.setDept(department);
-            List<Employee> employeeList = new ArrayList<Employee>();
+            List<Employee> employeeList = new ArrayList<>();
             employeeList.add(employee);
             employeeList.add(employee2);
             mapper.addEmployees(employeeList);
