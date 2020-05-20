@@ -22,7 +22,14 @@
         size 代表可以缓存多少个元素
         type 指定自定义缓存的全类名，需要自定义的话需要实现Cache接口
     -->
-    <cache eviction="LRU" flushInterval="60000" readOnly="false"  size="1024" ></cache>
+    <!--<cache eviction="LRU" flushInterval="60000" readOnly="false"  size="1024" ></cache>-->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+        <property name="timeToIdleSeconds" value="3600"/>
+        <property name="timeToLiveSeconds" value="3600"/>
+        <property name="maxEntriesLocalHeap" value="1000"/>
+        <property name="maxEntriesLocalDisk" value="10000000"/>
+        <property name="memoryStoreEvictionPolicy" value="LRU"/>
+    </cache>
     <select id="getEmployeeMapList" resultType="emp" databaseId="mysql" >
         select * from tbl_employee where last_name like #{lastName}
     </select>

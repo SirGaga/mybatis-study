@@ -420,7 +420,26 @@ public class MyBatisTest {
      *      4.mapper.xml中的每个 select 标签都有 flushCache="false"这个属性，如果设置为 true，那么每次查询都会清空一二级缓存
      *      5.sqlSession.clearCache();方法只会清空当前session的一级缓存，不会清空二级缓存
      *      6.全局配置中的 localCacheScope 本地缓存作用域，影响一级缓存，默认Session，即当前会话的所有数据保存在会话缓存中；
-     *          取值为STATEMENT表示可以禁用一级缓存
+     *          取值为STATEMENT表示可以禁用一级缓存。
+     * 第三方缓存整合（ehcache）
+     *  1.导入ehcache的maven依赖
+     *  2.根路径下创建ehcache.xml文件 文件头看 ehcache的jar文件中的 ehcache-failsafe.xml 文件，同时添加该文件中已经写好的默认配置
+     *  3.在 http://www.ehcache.org/ehcache.xsd 网址 下载 xsd文件 重新配置 ehcache.xml 中 xsi:noNamespaceSchemaLocation 文件引用路径
+     *  4.添加 slf4j api的一个简单实现
+     *      <dependency>
+     *          <groupId>org.slf4j</groupId>
+     *          <artifactId>slf4j-log4j12</artifactId>
+     *          <version>1.7.25</version>
+     *      </dependency>
+     *  5.在需要开启缓存的mapper.xml中添加<cache></cache>标签
+     *      <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+     *         <property name="timeToIdleSeconds" value="3600"/>
+     *         <property name="timeToLiveSeconds" value="3600"/>
+     *         <property name="maxEntriesLocalHeap" value="1000"/>
+     *         <property name="maxEntriesLocalDisk" value="10000000"/>
+     *         <property name="memoryStoreEvictionPolicy" value="LRU"/>
+     *     </cache>
+     *
      */
     @Test
     public void testFirstLevelCache() throws IOException {

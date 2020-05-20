@@ -3,6 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhangjie.dao.DepartmentMapper">
+    <!--引用缓存-->
+    <cache-ref namespace="com.zhangjie.dao.EmployeeMapper"/>
     <select id="getDeptById" databaseId="mysql" resultType="com.zhangjie.bean.Department">
         select id,department_name departmentName from tbl_department where id = #{id}
     </select>
